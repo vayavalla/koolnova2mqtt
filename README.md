@@ -1,6 +1,4 @@
-![Go](https://github.com/jpeletier/koolnova2mqtt/workflows/Go/badge.svg)
-[![Go Report](https://goreportcard.com/badge/github.com/jpeletier/koolnova2mqtt)](https://goreportcard.com/report/github.com/jpeletier/koolnova2mqtt)
-[![Godoc Reference](https://godoc.org/github.com/jpeletier/koolnova2mqtt?status.svg)](https://pkg.go.dev/github.com/jpeletier/koolnova2mqtt)
+[![Build and test](https://github.com/vayavalla/koolnova2mqtt/actions/workflows/build-test.yml/badge.svg?branch=koolnova2mqtt-2.0)](https://github.com/vayavalla/koolnova2mqtt/actions/workflows/build-test.yml)
 
 # koolnova2mqtt bridge
 
@@ -76,7 +74,7 @@ Wire the controller's D+ and D- ports as follows:
 
 ## Download
 
-Check the [Releases](https://github.com/jpeletier/koolnova2mqtt/releases) page and download the appropriate binary for your platform.
+Check the [Releases](https://github.com/vayavalla/koolnova2mqtt/releases) page and download the appropriate binary for your platform.
 
 ## Running koolnova2mqtt
 
@@ -328,4 +326,4 @@ verified for the tested installation**, rather than assumed to be universal.
 
 ## Author(s)
 
-This package is written and maintained by Javier Peletier ([@jpeletier](https://github.com/jpeletier))
+The original project was written by Javier Peletier ([@jpeletier](https://github.com/jpeletier)). This Koolnova 2.0 fork is adapted and maintained by [@vayavalla](https://github.com/vayavalla).
