@@ -143,43 +143,101 @@ The generated structure in MQTT looks as follows:
 koolnova2mqtt
 └── firstFloor
     ├── zone1
+    │   ├── enabled = true
+    │   ├── enabled
+    │   │   └── set
     │   ├── fanMode = auto
+    │   ├── fanMode
+    │   │   └── set
     │   ├── targetTemp = 20.5
+    │   ├── targetTemp
+    │   │   └── set
     │   ├── currentTemp = 21
-    │   └── hvacMode = heat
+    │   ├── hvacMode = heat
+    │   └── hvacMode
+    │       └── set        # legacy compatibility
+    │
     ├── zone2
+    │   ├── enabled = true
     │   ├── fanMode = low
     │   ├── targetTemp = 21
     │   ├── currentTemp = 20
     │   └── hvacMode = heat
-    ├── zone3
-    │   ├── fanMode = auto
-    │   ├── targetTemp = 21
-    │   ├── currentTemp = 21.5
-    │   └── hvacMode = heat
+    │
+    ├── ...
+    │
     └── sys
-        ├── ac1
-        │   ├── airflow = 0
-        │   ├── targetTemp = 0
-        │   └── fanMode = high
-        ├── ac2
-        │   ├── airflow = 0
-        │   ├── targetTemp = 0
-        │   └── fanMode = high
-        ├── ac3
-        │   ├── airflow = 0
-        │   ├── targetTemp = 0
-        │   └── fanMode = high
-        ├── ac4
-        │   ├── airflow = 0
-        │   ├── targetTemp = 0
-        │   └── fanMode = high
-        ├── efficiency = 3
         ├── enabled = true
+        │   └── set
+        ├── hvacMode = heat
+        │   └── set
+        ├── efficiency = 3
+        ├── holdMode = underfloor and fan
+        │   └── set
         ├── serialBaud = 9600
         ├── serialParity = even
-        └── holdMode = underfloor and fan
-
+        ├── slaveId = 49
+        │
+        ├── activeModes
+        │   ├── fan
+        │   ├── cool
+        │   ├── heat
+        │   └── dry
+        │
+        ├── temperatureLimits
+        │   ├── maxHeat
+        │   └── minCool
+        │
+        ├── autoChange
+        │   └── ...
+        │
+        ├── humidityControl
+        │   └── threshold
+        │
+        ├── waterTemperature
+        │   └── ...
+        ├── outdoorTemperature
+        │   └── ...
+        ├── auxTemperature
+        │   └── ...
+        │
+        ├── demand
+        │   ├── floor
+        │   └── ac3
+        │
+        ├── ac1
+        │   ├── airflow
+        │   ├── targetTemp
+        │   ├── fanMode
+        │   ├── connectedVolume
+        │   ├── demandVolume
+        │   └── averageTargetTemp
+        │
+        ├── ac2
+        │   ├── airflow
+        │   ├── targetTemp
+        │   ├── fanMode
+        │   ├── connectedVolume
+        │   ├── demandVolume
+        │   └── averageTargetTemp
+        │
+        ├── ac3
+        │   ├── airflow
+        │   ├── targetTemp
+        │   ├── fanMode
+        │   ├── connectedVolume
+        │   ├── demandVolume
+        │   ├── averageTargetTemp
+        │   ├── efficiency
+        │   └── speed
+        │
+        └── ac4
+            ├── airflow
+            ├── targetTemp
+            ├── fanMode
+            ├── connectedVolume
+            ├── demandVolume
+            └── averageTargetTemp
 ```
 Most of the topics have a child `set` topic that allow you to modify that value. Thus, to change the target temperature of zone2 to 20.5ºC, write the string `20.5` to `koolnova2mqtt/firstFloor/zone2/targetTemp/set` topic. With the tool `mosquitto_pub`:
 
