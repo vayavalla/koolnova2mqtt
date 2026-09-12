@@ -12,19 +12,41 @@ const REG_MODE = 2
 const REG_TARGET_TEMP = 3
 const REG_CURRENT_TEMP = 4
 
-const REG_AIRFLOW = 65
-const REG_AC_TARGET_TEMP = 69
-const REG_AC_TARGET_FAN_MODE = 73
-const REG_SERIAL_CONFIG = 77
-const REG_SLAVE_ID = 78
-const REG_EFFICIENCY = 79
-const REG_SYSTEM_ENABLED = 81
-const REG_SYS_KN_MODE = 82
+// Koolnova Modbus 2.0
+//
+// Zone registers 40001..40064 are unchanged.
+// System registers move in Modbus 2.0.
+
+const REG_AIRFLOW = 93
+const REG_AC_TARGET_TEMP = 97
+const REG_AC_TARGET_FAN_MODE = 101
+const REG_SERIAL_CONFIG = 105
+const REG_SLAVE_ID = 106
+const REG_EFFICIENCY = 74
+const REG_SYSTEM_ENABLED = 109
+const REG_SYS_KN_MODE = 110
+
+// Koolnova 2.0 advanced system registers.
+const REG_ACTIVE_MODES = 75
+const REG_TEMP_LIMITS = 76
+const REG_AUTO_CHANGE = 77
+const REG_WATER_TEMP = 82
+const REG_OUTDOOR_TEMP = 83
+const REG_AUX_TEMP = 84
+const REG_FLOOR_DEMAND = 111
+const REG_AC3_DEMAND = 112
+const REG_CONNECTED_VOLUME = 113
+const REG_DEMAND_VOLUME = 117
+const REG_AVG_TARGET_AC1 = 121
+const REG_AVG_TARGET_AC2 = 122
+const REG_AVG_TARGET_AC3 = 123
+const REG_AVG_TARGET_AC4 = 124 // verified on real Koolnova 2.0 hardware
+const REG_EFI_SPEED_AC3 = 125  // verified on real Koolnova 2.0 hardware
 
 const FIRST_ZONE_REGISTER = REG_ENABLED
 const TOTAL_ZONE_REGISTERS = NUM_ZONES * REG_PER_ZONE
-const FIRST_SYS_REGISTER = REG_AIRFLOW
-const TOTAL_SYS_REGISTERS = 18
+const FIRST_SYS_REGISTER = 65
+const TOTAL_SYS_REGISTERS = 62 // 40065..40126
 
 type FanMode byte
 
@@ -36,8 +58,10 @@ const FAN_AUTO FanMode = 4
 
 type KnMode byte
 
+const MODE_AIR_VENTILATION KnMode = 0x00
 const MODE_AIR_COOLING KnMode = 0x01
 const MODE_AIR_HEATING KnMode = 0x02
+const MODE_DEHUMIDIFICATION KnMode = 0x03
 const MODE_UNDERFLOOR_HEATING KnMode = 0x04
 const MODE_UNDERFLOOR_AIR_COOLING KnMode = 0x05
 const MODE_UNDERFLOOR_AIR_HEATING KnMode = 0x06
@@ -49,6 +73,8 @@ const HOLD_MODE_UNDERFLOOR_AND_FAN = "underfloor and fan"
 const HVAC_MODE_OFF = "off"
 const HVAC_MODE_COOL = "cool"
 const HVAC_MODE_HEAT = "heat"
+const HVAC_MODE_DRY = "dry"
+const HVAC_MODE_FAN_ONLY = "fan_only"
 
 type ACMachine int
 
@@ -97,25 +123,51 @@ func Str2FanMode(st string) (FanMode, error) {
 }
 
 func ApplyHvacMode(knMode KnMode, hvacMode string) KnMode {
-	switch knMode {
-	case MODE_AIR_COOLING:
-		if hvacMode == HVAC_MODE_HEAT {
-			return MODE_AIR_HEATING
-		}
-	case MODE_AIR_HEATING:
-		if hvacMode == HVAC_MODE_COOL {
+	switch hvacMode {
+	case HVAC_MODE_FAN_ONLY:
+		return MODE_AIR_VENTILATION
+	case HVAC_MODE_DRY:
+		return MODE_DEHUMIDIFICATION
+	case HVAC_MODE_COOL:
+		switch knMode {
+		case MODE_UNDERFLOOR_HEATING, MODE_UNDERFLOOR_AIR_HEATING, MODE_UNDERFLOOR_AIR_COOLING:
+			return MODE_UNDERFLOOR_AIR_COOLING
+		default:
 			return MODE_AIR_COOLING
 		}
-	case MODE_UNDERFLOOR_AIR_COOLING:
-		if hvacMode == HVAC_MODE_HEAT {
+	case HVAC_MODE_HEAT:
+		switch knMode {
+		case MODE_UNDERFLOOR_HEATING:
+			return MODE_UNDERFLOOR_HEATING
+		case MODE_UNDERFLOOR_AIR_COOLING, MODE_UNDERFLOOR_AIR_HEATING:
 			return MODE_UNDERFLOOR_AIR_HEATING
+		default:
+			return MODE_AIR_HEATING
 		}
-	case MODE_UNDERFLOOR_AIR_HEATING, MODE_UNDERFLOOR_HEATING:
-		if hvacMode == HVAC_MODE_COOL {
-			return MODE_UNDERFLOOR_AIR_COOLING
-		}
+	default:
+		return knMode
 	}
-	return knMode
+}
+
+func KnMode2Str(knMode KnMode) string {
+	switch knMode {
+	case MODE_AIR_VENTILATION:
+		return "fan"
+	case MODE_AIR_COOLING:
+		return "cool"
+	case MODE_AIR_HEATING:
+		return "heat"
+	case MODE_DEHUMIDIFICATION:
+		return "dry"
+	case MODE_UNDERFLOOR_HEATING:
+		return "underfloor"
+	case MODE_UNDERFLOOR_AIR_COOLING:
+		return "underfloorCool"
+	case MODE_UNDERFLOOR_AIR_HEATING:
+		return "underfloorHeat"
+	default:
+		return "unknown"
+	}
 }
 
 func ApplyHoldMode(knMode KnMode, holdMode string) KnMode {

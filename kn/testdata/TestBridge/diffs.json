@@ -3,13 +3,7 @@
 		"ID": 1,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "fan",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 2,
@@ -17,9 +11,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -27,13 +21,7 @@
 		"ID": 3,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 4,
@@ -117,13 +105,7 @@
 		"ID": 11,
 		"Topic": "topicPrefix/TestModule/zone1/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 4,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 12,
@@ -137,7 +119,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -149,7 +131,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -159,25 +141,13 @@
 		"ID": 15,
 		"Topic": "topicPrefix/TestModule/zone1/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 16,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 17,
@@ -185,9 +155,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -197,9 +167,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -219,13 +189,7 @@
 		"ID": 20,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 21,
@@ -233,9 +197,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -245,9 +209,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -327,13 +291,7 @@
 		"ID": 29,
 		"Topic": "topicPrefix/TestModule/zone2/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 30,
@@ -347,7 +305,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -359,7 +317,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -369,25 +327,13 @@
 		"ID": 33,
 		"Topic": "topicPrefix/TestModule/zone2/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 34,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 35,
@@ -395,9 +341,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -407,9 +353,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -429,13 +375,7 @@
 		"ID": 38,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 39,
@@ -443,9 +383,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -455,9 +395,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -537,13 +477,7 @@
 		"ID": 47,
 		"Topic": "topicPrefix/TestModule/zone3/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 48,
@@ -557,7 +491,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -569,7 +503,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -579,25 +513,13 @@
 		"ID": 51,
 		"Topic": "topicPrefix/TestModule/zone3/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 52,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 53,
@@ -605,9 +527,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -617,9 +539,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -639,13 +561,7 @@
 		"ID": 56,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 57,
@@ -653,9 +569,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -665,9 +581,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -747,13 +663,7 @@
 		"ID": 65,
 		"Topic": "topicPrefix/TestModule/zone4/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 66,
@@ -767,7 +677,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -779,7 +689,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -789,25 +699,13 @@
 		"ID": 69,
 		"Topic": "topicPrefix/TestModule/zone4/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 70,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 71,
@@ -815,9 +713,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -827,9 +725,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -849,13 +747,7 @@
 		"ID": 74,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 75,
@@ -863,9 +755,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -875,9 +767,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -957,13 +849,7 @@
 		"ID": 83,
 		"Topic": "topicPrefix/TestModule/zone5/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 84,
@@ -977,7 +863,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -989,7 +875,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -999,25 +885,13 @@
 		"ID": 87,
 		"Topic": "topicPrefix/TestModule/zone5/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 88,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 89,
@@ -1025,9 +899,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1037,9 +911,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1059,13 +933,7 @@
 		"ID": 92,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 93,
@@ -1073,9 +941,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1085,9 +953,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1161,13 +1029,7 @@
 		"ID": 101,
 		"Topic": "topicPrefix/TestModule/zone6/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 102,
@@ -1181,7 +1043,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -1193,7 +1055,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -1203,25 +1065,13 @@
 		"ID": 105,
 		"Topic": "topicPrefix/TestModule/zone6/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 106,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 107,
@@ -1229,9 +1079,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1241,9 +1091,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1263,13 +1113,7 @@
 		"ID": 110,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 111,
@@ -1277,9 +1121,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1289,9 +1133,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1365,13 +1209,7 @@
 		"ID": 119,
 		"Topic": "topicPrefix/TestModule/zone7/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 120,
@@ -1385,7 +1223,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -1397,7 +1235,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -1407,25 +1245,13 @@
 		"ID": 123,
 		"Topic": "topicPrefix/TestModule/zone7/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 124,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 125,
@@ -1433,9 +1259,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1445,9 +1271,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1467,13 +1293,7 @@
 		"ID": 128,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 129,
@@ -1481,9 +1301,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1493,9 +1313,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1575,13 +1395,7 @@
 		"ID": 137,
 		"Topic": "topicPrefix/TestModule/zone8/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 138,
@@ -1595,7 +1409,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -1607,7 +1421,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -1617,25 +1431,13 @@
 		"ID": 141,
 		"Topic": "topicPrefix/TestModule/zone8/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 142,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 143,
@@ -1643,9 +1445,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1655,9 +1457,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1677,13 +1479,7 @@
 		"ID": 146,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 147,
@@ -1691,9 +1487,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1703,9 +1499,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1785,13 +1581,7 @@
 		"ID": 155,
 		"Topic": "topicPrefix/TestModule/zone9/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 156,
@@ -1805,7 +1595,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -1817,7 +1607,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -1827,25 +1617,13 @@
 		"ID": 159,
 		"Topic": "topicPrefix/TestModule/zone9/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 160,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 161,
@@ -1853,9 +1631,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1865,9 +1643,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1887,13 +1665,7 @@
 		"ID": 164,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 165,
@@ -1901,9 +1673,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -1913,9 +1685,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -1995,13 +1767,7 @@
 		"ID": 173,
 		"Topic": "topicPrefix/TestModule/zone10/hvacMode/set",
 		"Payload": "cool",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 5
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 174,
@@ -2015,7 +1781,7 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 5,
 				"New": 1
 			}
@@ -2027,7 +1793,7 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
+				"Address": 110,
 				"Old": 1,
 				"New": 5
 			}
@@ -2037,25 +1803,13 @@
 		"ID": 177,
 		"Topic": "topicPrefix/TestModule/zone10/hvacMode/set",
 		"Payload": "heat",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 5,
-				"New": 6
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 178,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 179,
@@ -2063,9 +1817,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -2075,9 +1829,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	},
@@ -2097,13 +1851,7 @@
 		"ID": 182,
 		"Topic": "topicPrefix/TestModule/sys/holdMode/set",
 		"Payload": "underfloor",
-		"Diffs": [
-			{
-				"Address": 82,
-				"Old": 6,
-				"New": 4
-			}
-		]
+		"Diffs": null
 	},
 	{
 		"ID": 183,
@@ -2111,9 +1859,9 @@
 		"Payload": "fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 4,
-				"New": 2
+				"Address": 110,
+				"Old": 5,
+				"New": 1
 			}
 		]
 	},
@@ -2123,9 +1871,9 @@
 		"Payload": "underfloor and fan",
 		"Diffs": [
 			{
-				"Address": 82,
-				"Old": 2,
-				"New": 6
+				"Address": 110,
+				"Old": 1,
+				"New": 5
 			}
 		]
 	}

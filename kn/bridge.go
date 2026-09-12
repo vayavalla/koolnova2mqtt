@@ -6,6 +6,7 @@ import (
 	"koolnova2mqtt/watcher"
 	"log"
 	"strconv"
+	"strings"
 )
 
 // MqttClient defines the expected MQTT client pub sub interface
@@ -102,6 +103,92 @@ func (b *Bridge) Start() error {
 	holdModeTopic := b.getSysTopic("holdMode")
 	holdModeSetTopic := holdModeTopic + "/set"
 
+	systemEnabledSetTopic := b.getSysTopic("enabled") + "/set"
+	globalHvacModeSetTopic := b.getSysTopic("hvacMode") + "/set"
+
+	// Encendido/apagado GLOBAL.
+	// Escribe exclusivamente el registro 40109.
+	err = b.Mqtt.Subscribe(systemEnabledSetTopic, func(message string) {
+		var enabled bool
+
+		switch strings.ToLower(strings.TrimSpace(message)) {
+		case "on", "true", "1":
+			enabled = true
+
+		case "off", "false", "0":
+			enabled = false
+
+		default:
+			log.Printf("Unknown global enabled value %q", message)
+			return
+		}
+
+		if writeErr := sys.SetSystemEnabled(enabled); writeErr != nil {
+			log.Printf(
+				"Cannot set global system enabled=%t: %v",
+				enabled,
+				writeErr,
+			)
+			return
+		}
+
+		// Fuerza una lectura para actualizar inmediatamente los topics de estado.
+		if pollErr := b.sysw.Poll(); pollErr != nil {
+			log.Printf(
+				"Cannot refresh system registers after global power command: %v",
+				pollErr,
+			)
+		}
+	})
+	if err != nil {
+		return err
+	}
+
+	// Cambio de modo GLOBAL.
+	// Escribe exclusivamente el registro 40110.
+	// NO enciende ni apaga el sistema.
+	err = b.Mqtt.Subscribe(globalHvacModeSetTopic, func(message string) {
+		var knMode KnMode
+
+		switch strings.ToLower(strings.TrimSpace(message)) {
+		case HVAC_MODE_FAN_ONLY:
+			knMode = MODE_AIR_VENTILATION
+
+		case HVAC_MODE_COOL:
+			knMode = MODE_AIR_COOLING
+
+		case HVAC_MODE_HEAT:
+			knMode = MODE_AIR_HEATING
+
+		case HVAC_MODE_DRY:
+			knMode = MODE_DEHUMIDIFICATION
+
+		default:
+			log.Printf("Unknown global HVAC mode %q", message)
+			return
+		}
+
+		if writeErr := sys.SetSystemKNMode(knMode); writeErr != nil {
+			log.Printf(
+				"Cannot set global HVAC mode to %q: %v",
+				message,
+				writeErr,
+			)
+			return
+		}
+
+		// Fuerza una lectura para actualizar inmediatamente los topics de estado.
+		if pollErr := b.sysw.Poll(); pollErr != nil {
+			log.Printf(
+				"Cannot refresh system registers after global mode command: %v",
+				pollErr,
+			)
+		}
+	})
+	if err != nil {
+		return err
+	}
+
 	// configure publishing when modbus registers change
 	for _, zone := range zones {
 		zone := zone
@@ -112,17 +199,19 @@ func (b *Bridge) Start() error {
 		fanModeSetTopic := fanModeTopic + "/set"
 		hvacModeTopic := b.getZoneTopic(zone.ZoneNumber, "hvacMode")
 		hvacModeSetTopic := hvacModeTopic + "/set"
+		enabledTopic := b.getZoneTopic(zone.ZoneNumber, "enabled")
+		enabledSetTopic := enabledTopic + "/set"
 
 		// In HA there is three HVAC modes: "cool", "heat" and "off". Therefore,
 		// publish "OFF" if we detect the REG_ENABLED change is off
 		// Otherwise, publish "heat" or "cool" depending on REG_MODE
 		zone.OnEnabledChange = func() {
-			hvacModeTopic := b.getZoneTopic(zone.ZoneNumber, "hvacMode")
-			var mode string
-			if zone.isOn() {
+			enabled := zone.isOn()
+			b.Mqtt.Publish(enabledTopic, 0, true, fmt.Sprintf("%t", enabled))
+
+			mode := HVAC_MODE_OFF
+			if enabled {
 				mode = sys.HVACMode()
-			} else {
-				mode = HVAC_MODE_OFF
 			}
 			b.Mqtt.Publish(hvacModeTopic, 0, true, mode)
 		}
@@ -175,27 +264,47 @@ func (b *Bridge) Start() error {
 			return err
 		}
 
-		// Subscribe to HVAC Mode set topic in MQTT
+		// Control ON/OFF independiente de esta zona.
+		// No modifica el modo global del sistema.
+		err = b.Mqtt.Subscribe(enabledSetTopic, func(message string) {
+			var enabled bool
+			switch strings.ToLower(strings.TrimSpace(message)) {
+			case "on", "true", "1":
+				enabled = true
+			case "off", "false", "0":
+				enabled = false
+			default:
+				log.Printf("Unknown enabled value %q for zone %d", message, zone.ZoneNumber)
+				return
+			}
+
+			if setErr := zone.setOn(enabled); setErr != nil {
+				log.Printf("Cannot set zone %d enabled=%t: %v", zone.ZoneNumber, enabled, setErr)
+			}
+		})
+		if err != nil {
+			return err
+		}
+
+		// Compatibilidad con clientes antiguos que usan zoneN/hvacMode/set.
+		// IMPORTANTE: este topic ya NO cambia el modo global (40110).
+		// "off" apaga la zona; un modo HVAC válido solamente la enciende.
 		err = b.Mqtt.Subscribe(hvacModeSetTopic, func(message string) {
-			// If user sets the Home Assistant HVAC mode to off, turn off this zone
-			if message == HVAC_MODE_OFF {
-				err := zone.setOn(false) // turn zone off (REG_ENABLED)
-				if err != nil {
-					log.Printf("Cannot set zone %d to off", zone.ZoneNumber)
-				}
+			cleaned := strings.ToLower(strings.TrimSpace(message))
+			var enabled bool
+
+			switch cleaned {
+			case HVAC_MODE_OFF:
+				enabled = false
+			case HVAC_MODE_COOL, HVAC_MODE_HEAT, HVAC_MODE_DRY, HVAC_MODE_FAN_ONLY:
+				enabled = true
+			default:
+				log.Printf("Unknown HVAC mode %q in message to zone %d", message, zone.ZoneNumber)
 				return
 			}
-			// Translate HA HVAC mode to Koolnova's
-			knMode := sys.GetSystemKNMode()
-			knMode = ApplyHvacMode(knMode, message)
-			err = sys.SetSystemKNMode(knMode)
-			if err != nil {
-				log.Printf("Cannot set knmode mode to %x in zone %d", knMode, zone.ZoneNumber)
-			}
-			err := zone.setOn(true)
-			if err != nil {
-				log.Printf("Cannot set zone %d to on", zone.ZoneNumber)
-				return
+
+			if setErr := zone.setOn(enabled); setErr != nil {
+				log.Printf("Cannot set zone %d enabled=%t: %v", zone.ZoneNumber, enabled, setErr)
 			}
 		})
 		if err != nil {
@@ -209,7 +318,7 @@ func (b *Bridge) Start() error {
 			knMode = ApplyHoldMode(knMode, message)
 			err := sys.SetSystemKNMode(knMode)
 			if err != nil {
-				log.Printf("Cannot set knmode mode to %x in zone %d", knMode, zone.ZoneNumber)
+				log.Printf("Cannot set global hold mode %q: %v", message, err)
 			}
 		})
 		if err != nil {
@@ -229,7 +338,7 @@ func (b *Bridge) Start() error {
 			"unique_id":                 name,
 			"min_temp":                  15,
 			"max_temp":                  35,
-			"modes":                     []string{HVAC_MODE_COOL, HVAC_MODE_HEAT, HVAC_MODE_OFF},
+			"modes":                     []string{HVAC_MODE_COOL, HVAC_MODE_HEAT, HVAC_MODE_DRY, HVAC_MODE_FAN_ONLY, HVAC_MODE_OFF},
 			"mode_state_topic":          hvacModeTopic,
 			"mode_command_topic":        hvacModeSetTopic,
 			"fan_modes":                 []string{"auto", "low", "medium", "high"},
@@ -286,19 +395,45 @@ func (b *Bridge) Start() error {
 	sys.OnSystemEnabledChange = func() {
 		enabled := sys.GetSystemEnabled()
 		b.Mqtt.Publish(b.getSysTopic("enabled"), 0, true, fmt.Sprintf("%t", enabled))
+		b.Mqtt.Publish(b.getSysTopic("hvacMode"), 0, true, sys.HVACMode())
 		b.publishHvacMode()
 	}
 
 	sys.OnKnModeChange = func() {
+		b.Mqtt.Publish(b.getSysTopic("hvacMode"), 0, true, sys.HVACMode())
 		b.publishHvacMode()
 		b.Mqtt.Publish(holdModeTopic, 0, true, sys.HoldMode())
 	}
 
-	// Trigger a callback on all registers so the MQTT broker is updated on connect:
+	sys.OnActiveModesChange = func() { b.publishActiveModes() }
+	sys.OnTemperatureLimitsChange = func() { b.publishTemperatureLimits() }
+	sys.OnAutoChangeChange = func() { b.publishAutoChange() }
+	sys.OnWaterTemperatureChange = func() { b.publishWaterTemperature() }
+	sys.OnOutdoorTemperatureChange = func() { b.publishOutdoorTemperature() }
+	sys.OnAuxTemperatureChange = func() { b.publishAuxTemperature() }
+	sys.OnDemandChange = func() { b.publishDemand() }
+	sys.OnACConnectedVolumeChange = func(ac ACMachine) {
+		b.Mqtt.Publish(
+			b.getACTopic(ac, "connectedVolume"),
+			0, true,
+			strconv.Itoa(sys.GetConnectedVolume(ac)),
+		)
+	}
+	sys.OnACDemandVolumeChange = func(ac ACMachine) {
+		b.Mqtt.Publish(
+			b.getACTopic(ac, "demandVolume"),
+			0, true,
+			strconv.Itoa(sys.GetDemandVolume(ac)),
+		)
+	}
+	sys.OnACAverageTargetChange = func(ac ACMachine) { b.publishACAverageTarget(ac) }
+	sys.OnAC3StatusChange = func() { b.publishAC3Status() }
+
+	// Trigger callbacks once so the MQTT broker is updated on connect.
 	b.zw.TriggerCallbacks()
 	b.sysw.TriggerCallbacks()
 
-	// Publish one-off static information
+	// Publish one-off static information.
 	b.Mqtt.Publish(b.getSysTopic("serialBaud"), 0, true, strconv.Itoa(sys.GetBaudRate()))
 	b.Mqtt.Publish(b.getSysTopic("serialParity"), 0, true, sys.GetParity())
 	b.Mqtt.Publish(b.getSysTopic("slaveId"), 0, true, strconv.Itoa(sys.GetSlaveID()))
@@ -344,6 +479,69 @@ func (b *Bridge) getSysTopic(subtopic string) string {
 
 func (b *Bridge) getACTopic(ac ACMachine, subtopic string) string {
 	return b.getSysTopic(fmt.Sprintf("ac%d/%s", ac, subtopic))
+}
+
+func onOff(v bool) string {
+	if v {
+		return "ON"
+	}
+	return "OFF"
+}
+
+func (b *Bridge) publishActiveModes() {
+	s := b.sys
+	b.Mqtt.Publish(b.getSysTopic("activeModes/raw"), 0, true, strconv.Itoa(int(s.GetActiveModesRaw())))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/fan"), 0, true, onOff(s.ActiveModeEnabled(0)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/cool"), 0, true, onOff(s.ActiveModeEnabled(1)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/heat"), 0, true, onOff(s.ActiveModeEnabled(2)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/dry"), 0, true, onOff(s.ActiveModeEnabled(3)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/underfloor"), 0, true, onOff(s.ActiveModeEnabled(4)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/underfloorCool"), 0, true, onOff(s.ActiveModeEnabled(5)))
+	b.Mqtt.Publish(b.getSysTopic("activeModes/underfloorHeat"), 0, true, onOff(s.ActiveModeEnabled(6)))
+}
+
+func (b *Bridge) publishTemperatureLimits() {
+	s := b.sys
+	b.Mqtt.Publish(b.getSysTopic("temperatureLimits/raw"), 0, true, strconv.Itoa(int(s.GetTemperatureLimitsRaw())))
+	b.Mqtt.Publish(b.getSysTopic("temperatureLimits/maxHeat"), 0, true, fmt.Sprintf("%g", s.GetMaxHeatTemperature()))
+	b.Mqtt.Publish(b.getSysTopic("temperatureLimits/minCool"), 0, true, fmt.Sprintf("%g", s.GetMinCoolTemperature()))
+}
+
+func (b *Bridge) publishAutoChange() {
+	s := b.sys
+	b.Mqtt.Publish(b.getSysTopic("autoChange/raw"), 0, true, strconv.Itoa(int(s.GetAutoChangeRaw())))
+	b.Mqtt.Publish(b.getSysTopic("autoChange/aboveMaximumMode"), 0, true, KnMode2Str(s.GetAutoAboveMode()))
+	b.Mqtt.Publish(b.getSysTopic("autoChange/belowMinimumMode"), 0, true, KnMode2Str(s.GetAutoBelowMode()))
+	b.Mqtt.Publish(b.getSysTopic("humidityControl/threshold"), 0, true, strconv.Itoa(s.GetHumidityThreshold()))
+}
+
+func (b *Bridge) publishWaterTemperature() {
+	b.Mqtt.Publish(b.getSysTopic("waterTemperature/raw"), 0, true, strconv.Itoa(int(b.sys.GetWaterTemperatureRaw())))
+	b.Mqtt.Publish(b.getSysTopic("waterTemperature/value"), 0, true, fmt.Sprintf("%.1f", b.sys.GetWaterTemperature()))
+}
+func (b *Bridge) publishOutdoorTemperature() {
+	b.Mqtt.Publish(b.getSysTopic("outdoorTemperature/raw"), 0, true, strconv.Itoa(int(b.sys.GetOutdoorTemperatureRaw())))
+	b.Mqtt.Publish(b.getSysTopic("outdoorTemperature/value"), 0, true, fmt.Sprintf("%.1f", b.sys.GetOutdoorTemperature()))
+}
+func (b *Bridge) publishAuxTemperature() {
+	b.Mqtt.Publish(b.getSysTopic("auxTemperature/raw"), 0, true, strconv.Itoa(int(b.sys.GetAuxTemperatureRaw())))
+	b.Mqtt.Publish(b.getSysTopic("auxTemperature/value"), 0, true, fmt.Sprintf("%.1f", b.sys.GetAuxTemperature()))
+}
+func (b *Bridge) publishDemand() {
+	b.Mqtt.Publish(b.getSysTopic("demand/floorThermostats"), 0, true, strconv.Itoa(b.sys.GetFloorDemand()))
+	b.Mqtt.Publish(b.getSysTopic("demand/ac3Thermostats"), 0, true, strconv.Itoa(b.sys.GetAC3Demand()))
+}
+func (b *Bridge) publishACVolumes(ac ACMachine) {
+	b.Mqtt.Publish(b.getACTopic(ac, "connectedVolume"), 0, true, strconv.Itoa(b.sys.GetConnectedVolume(ac)))
+	b.Mqtt.Publish(b.getACTopic(ac, "demandVolume"), 0, true, strconv.Itoa(b.sys.GetDemandVolume(ac)))
+}
+func (b *Bridge) publishACAverageTarget(ac ACMachine) {
+	b.Mqtt.Publish(b.getACTopic(ac, "averageTargetTempRaw"), 0, true, strconv.Itoa(int(b.sys.GetAverageTargetRaw(ac))))
+	b.Mqtt.Publish(b.getACTopic(ac, "averageTargetTemp"), 0, true, fmt.Sprintf("%g", b.sys.GetAverageTargetTemperature(ac)))
+}
+func (b *Bridge) publishAC3Status() {
+	b.Mqtt.Publish(b.getACTopic(AC3, "efficiency"), 0, true, strconv.Itoa(b.sys.GetAC3Efficiency()))
+	b.Mqtt.Publish(b.getACTopic(AC3, "speed"), 0, true, strconv.Itoa(b.sys.GetAC3Speed()))
 }
 
 func (b *Bridge) publishHvacMode() {

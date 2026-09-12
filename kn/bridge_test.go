@@ -191,3 +191,164 @@ func TestBridge(tx *testing.T) {
 	t.EqualsFile("current-temp.json", mqttClient.messages)
 
 }
+
+func TestKoolnova2ControlWrites(tx *testing.T) {
+	mqttClient := NewMqttClientMock()
+	modbusClient := modbus.NewMock()
+
+	b := kn.NewBridge(&kn.Config{
+		ModuleName:  "TestModule",
+		SlaveID:     49,
+		TopicPrefix: "topicPrefix",
+		HassPrefix:  "hassPrefix",
+		Mqtt:        mqttClient,
+		Modbus:      modbusClient,
+	})
+
+	if err := b.Start(); err != nil {
+		tx.Fatalf("cannot start bridge: %v", err)
+	}
+
+	expectOnlyChange := func(topic, payload string, address uint16, expected uint16) {
+		tx.Helper()
+
+		before := append([]uint16(nil), modbusClient.State[49]...)
+
+		mqttClient.simulateMessage(topic, payload)
+
+		after := modbusClient.State[49]
+		diffs := diffState(before, after)
+
+		if len(diffs) != 1 {
+			tx.Fatalf(
+				"%s=%q: expected exactly one Modbus register change, got %+v",
+				topic, payload, diffs,
+			)
+		}
+
+		if diffs[0].Address != address || diffs[0].New != expected {
+			tx.Fatalf(
+				"%s=%q: expected register %d -> %d, got %+v",
+				topic, payload, address, expected, diffs[0],
+			)
+		}
+	}
+
+	expectNoChange := func(topic, payload string) {
+		tx.Helper()
+
+		before := append([]uint16(nil), modbusClient.State[49]...)
+
+		mqttClient.simulateMessage(topic, payload)
+
+		diffs := diffState(before, modbusClient.State[49])
+		if len(diffs) != 0 {
+			tx.Fatalf(
+				"%s=%q: expected no Modbus changes, got %+v",
+				topic, payload, diffs,
+			)
+		}
+	}
+
+	// Global power must write ONLY 40109.
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/enabled/set",
+		"false",
+		uint16(kn.REG_SYSTEM_ENABLED),
+		0,
+	)
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/enabled/set",
+		"true",
+		uint16(kn.REG_SYSTEM_ENABLED),
+		1,
+	)
+
+	// Global HVAC mode must write ONLY 40110.
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/hvacMode/set",
+		kn.HVAC_MODE_HEAT,
+		uint16(kn.REG_SYS_KN_MODE),
+		uint16(kn.MODE_AIR_HEATING),
+	)
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/hvacMode/set",
+		kn.HVAC_MODE_FAN_ONLY,
+		uint16(kn.REG_SYS_KN_MODE),
+		uint16(kn.MODE_AIR_VENTILATION),
+	)
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/hvacMode/set",
+		kn.HVAC_MODE_DRY,
+		uint16(kn.REG_SYS_KN_MODE),
+		uint16(kn.MODE_DEHUMIDIFICATION),
+	)
+	expectOnlyChange(
+		"topicPrefix/TestModule/sys/hvacMode/set",
+		kn.HVAC_MODE_COOL,
+		uint16(kn.REG_SYS_KN_MODE),
+		uint16(kn.MODE_AIR_COOLING),
+	)
+
+	// Global "off" is deliberately NOT a HVAC mode command.
+	// Global shutdown must be performed through sys/enabled/set.
+	expectNoChange(
+		"topicPrefix/TestModule/sys/hvacMode/set",
+		kn.HVAC_MODE_OFF,
+	)
+
+	// Per-zone power must modify ONLY that zone's enabled register.
+	expectOnlyChange(
+		"topicPrefix/TestModule/zone1/enabled/set",
+		"false",
+		uint16(kn.REG_ENABLED),
+		2,
+	)
+	expectOnlyChange(
+		"topicPrefix/TestModule/zone1/enabled/set",
+		"true",
+		uint16(kn.REG_ENABLED),
+		3,
+	)
+
+	// Regression test:
+	// legacy zoneX/hvacMode/set must NEVER change global register 40110.
+	//
+	// Put zone 1 OFF first while keeping the global mode COOL.
+	expectOnlyChange(
+		"topicPrefix/TestModule/zone1/enabled/set",
+		"false",
+		uint16(kn.REG_ENABLED),
+		2,
+	)
+
+	globalModeBefore := modbusClient.State[49][kn.REG_SYS_KN_MODE-1]
+
+	expectOnlyChange(
+		"topicPrefix/TestModule/zone1/hvacMode/set",
+		kn.HVAC_MODE_HEAT,
+		uint16(kn.REG_ENABLED),
+		3,
+	)
+
+	globalModeAfter := modbusClient.State[49][kn.REG_SYS_KN_MODE-1]
+	if globalModeAfter != globalModeBefore {
+		tx.Fatalf(
+			"zone1/hvacMode/set changed global register 40110: %d -> %d",
+			globalModeBefore,
+			globalModeAfter,
+		)
+	}
+
+	// Legacy "off" must only switch the zone off.
+	expectOnlyChange(
+		"topicPrefix/TestModule/zone1/hvacMode/set",
+		kn.HVAC_MODE_OFF,
+		uint16(kn.REG_ENABLED),
+		2,
+	)
+
+	if modbusClient.State[49][kn.REG_SYS_KN_MODE-1] != globalModeBefore {
+		tx.Fatalf("zone1 off changed global register 40110")
+	}
+}
